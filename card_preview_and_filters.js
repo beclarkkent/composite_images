@@ -1,8 +1,4 @@
-/*var json = jQuery.parseJSON('{"cards":['
-    + '{"id":"1", "bottom":"/mash/cards/card1.png", "top":"/mash/cards/card1t.png", "bx":"0", "by":"31", "tx":"0", "ty":"0", "orient":"h"}, '
-    + '{"id":"2", "bottom":"/mash/cards/card2.png", "top":"/mash/cards/card2t.png", "bx":"0", "by":"71", "tx":"0", "ty":"0", "orient":"v"}, '
-    + '{"id":"3", "bottom":"/mash/cards/card3.png", "top":"/mash/cards/card3t.png", "bx":"0", "by":"0", "tx":"0", "ty":"0", "orient":"h"}]}');
-*/
+
 
 //check browser support
 if (window.FormData === undefined) {
@@ -13,10 +9,6 @@ if (window.FormData === undefined) {
 jQuery('#card-preview-upload-button').click(function () {
     jQuery('#imguploader').focus().click(); // Open dialog
 });
-
-
-//jQuery(document).ready(function(){
-
 
 
 var c = [];
@@ -32,26 +24,6 @@ var per_page = 20;
 var json = new Object();
 json.cards = [];
 var customer_photo;
-
-
-//jQuery(window).bind("load", function() {
-//
-//    var count = Object.keys(json.cards).length;
-//
-//    jQuery('.card-loader').fadeTo('slow', 1);
-//
-//    for (var i = 0; i < count; i++) {
-//        var item = json.cards[i];
-//        c[item.id] = document.getElementById("canvas"+item.id);
-//        ctx[item.id] = c[item.id].getContext("2d");
-//        ctx[item.id].scale(0.6, 0.6);
-//        b[item.id] = loadImageInit(item.id, item.top, "bottom"+item.id);
-//        t[item.id] = loadImageInit(item.id, item.bottom, "top"+item.id);
-//
-//
-//    }
-//
-//});
 
 function drawImagesInit() {
     for (var i = load_offset; i < count; i++) {
@@ -93,7 +65,6 @@ function drawImagesInit() {
 
         }
     }
-    //jQuery('.card-loader').fadeTo('slow', 0);
 }
 
 function loadImageInit(id, src, typeid) {
@@ -115,11 +86,9 @@ function loadImageInit(id, src, typeid) {
 
 
 function drawImages(uimage) {
-    //if (uimage == true) {
-    //    var istart = 0;
-    //} else {
+
         var istart = load_offset;
-    //}
+
     for (var i = 0; i < count; i++) {
         var item = json.cards[i];
         var offset = i+1;
@@ -171,7 +140,6 @@ function drawImages(uimage) {
 
         if (i == (count-1)) {
             jQuery('.card-loader2').css('display', 'none');
-            //jQuery('.card-loader').fadeTo('slow', 0);
         }
     }
 
@@ -184,7 +152,6 @@ function loadImage(id, src, typeid,uimage) {
     img[typeid].src = src;
     img[typeid].onload = function() {
         loadedImages++
-        //console.log("Drawing: " + typeid + "....loadedImages: " + loadedImages + "  count: " + count + "  offset: " + load_offset);
         if (loadedImages == count*2) {
             loadedImages = 0;
             if (uimage == true) {
@@ -204,7 +171,6 @@ function combineImages(newImg) {
 
     for (var i = 0; i < count; i++) {
         var item = json.cards[i];
-        //console.log(json.cards);
         b[item.id] = loadImage(item.id, newImg, "bottom"+item.id,true);
         t[item.id] = loadImage(item.id, item.top, "top"+item.id,true);
     }
@@ -214,17 +180,11 @@ jQuery('#imguploader').bind('change', function() {
     jQuery('.card-loader2').css('display', 'inline-block');
 
     var file = this.files[0]; //we can retrive the file array.
-    // alert(file.type); if you want to check image type, uncomment this line.
-    // alert(file.size); if you want to check the image size, uncomment this line.
 
     var reader = new FileReader();
 
-    // file.target.result holds the DataURL which
-    // can be used as a source of the image:
-
     //imgpreview is the id of the img tag where you want to display the image
     reader.onload = function(file){
-        //$('#imgpreview').attr('src',  file.target.result);
         customer_photo = file.target.result
         loadedImages = 0;
         combineImages(customer_photo);
@@ -234,11 +194,6 @@ jQuery('#imguploader').bind('change', function() {
     // this will trigger the onload function above:
     reader.readAsDataURL(file);
 });
-
-
-
-
-
 
 
     var card_cat = getUrlParameters("cat", "", true);
@@ -273,17 +228,14 @@ jQuery('#imguploader').bind('change', function() {
     function finishedAjax(responseText, more)
     {
         if (more == true) {
-            //loadedImages = loadedImages+(load_offset*2);
             jQuery("#postContainer").append(responseText);
             count = Object.keys(json.cards).length;
 
-            //jQuery('.card-loader').fadeTo('slow', 1);
 
             for (var i = load_offset; i < count; i++) {
                 var item = json.cards[i];
                 c[item.id] = document.getElementById("canvas"+item.id);
                 ctx[item.id] = c[item.id].getContext("2d");
-                //ctx[item.id].scale(0.6, 0.6);
             }
 
                 if (customer_photo) {
@@ -299,18 +251,15 @@ jQuery('#imguploader').bind('change', function() {
             jQuery('#another').show();
             jQuery('.spinner-wrapper').remove();
         } else {
-            //loadedImages = loadedImages+(load_offset*2);
             jQuery("#postContainer").html(responseText);
 
             count = Object.keys(json.cards).length;
 
-            //jQuery('.card-loader').fadeTo('slow', 1);
 
             for (var i = load_offset; i < count; i++) {
                 var item = json.cards[i];
                 c[item.id] = document.getElementById("canvas"+item.id);
                 ctx[item.id] = c[item.id].getContext("2d");
-                //ctx[item.id].scale(0.6, 0.6);
             }
 
             if (customer_photo) {
@@ -351,16 +300,13 @@ jQuery('#imguploader').bind('change', function() {
             url: "/cards/more/?offset="+load_offset+"&cat="+card_cat+"&format="+card_format+"&orient="+card_orient+"&photos="+card_photos+"&color="+card_color+"&new="+card_new+"&designer="+card_designer+"&pop="+card_pop,
             context: document.body,
             success: function(responseText) {
-                //console.log(responseText);
                 finishedAjax(responseText, false);
             }
         });
 }
 function loadMore() {
-    //jQuery("#another").click(function(){
 
     jQuery('#another').hide();
-    //jQuery('.spinner-wrapper').show();
     jQuery("#postContainer").append('<div class="spinner-wrapper"  style="background: #fff;width:80px;height:80px;z-index:10;border-radius: 4px;box-shadow: 0 0 20px rgba(0,0,0,.2);display:inline-block;position:relative;margin-top:150px;margin-left:155px"><div class="spinner" style="display: inline-block;background-size: 50px;height: 50px;width: 50px;margin:15px"></div></div>');
 
     jQuery('.load-more-button').remove();
@@ -374,13 +320,11 @@ function loadMore() {
                 finishedAjax(responseText, true);
             } else {
                 jQuery('.spinner-wrapper').remove();
-                //jQuery('#nomore').show();
                 jQuery("#postContainer").append('<div class="flex-column" style="margin: 180px 0 0 100px;">No More Cards</div>');
             }
         }
     });
     return false;
-    //});
 }
 
 loadCards();
